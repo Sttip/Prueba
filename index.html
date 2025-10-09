@@ -534,6 +534,12 @@
             });
         });
 
+        // Función para formatear precios (CORREGIDA)
+        function formatPrice(price) {
+            // Convertir a formato chileno: $4.990 en lugar de $4.990.000
+            return `$${(price).toLocaleString('es-CL')}`;
+        }
+
         // Función para agregar productos al carrito
         function addToCart(name, price) {
             const existingItem = cart.find(item => item.name === name);
@@ -552,7 +558,7 @@
             showNotification(`${name} agregado al carrito`);
         }
 
-        // Función para actualizar el carrito
+        // Función para actualizar el carrito (CORREGIDA)
         function updateCart() {
             // Actualizar contador
             const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
@@ -572,7 +578,7 @@
                     cartItem.innerHTML = `
                         <div class="item-info">
                             <span class="item-name">${item.name}</span>
-                            <span class="item-price">$${(item.price / 100).toFixed(3)}</span>
+                            <span class="item-price">${formatPrice(item.price)}</span>
                         </div>
                         <div class="item-quantity">
                             <button class="quantity-btn minus" data-index="${index}">-</button>
@@ -607,9 +613,9 @@
                 });
             }
             
-            // Actualizar total
+            // Actualizar total (CORREGIDO)
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            totalPrice.textContent = `$${(total / 100).toFixed(3)}`;
+            totalPrice.textContent = formatPrice(total);
         }
 
         // Funciones para modificar cantidades
@@ -670,7 +676,7 @@
             }, 3000);
         }
 
-        // Finalizar compra
+        // Finalizar compra (CORREGIDO)
         checkoutBtn.addEventListener('click', function() {
             if (cart.length === 0) {
                 alert('Tu carrito está vacío. Agrega algunos productos antes de finalizar la compra.');
@@ -678,7 +684,7 @@
             }
             
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            alert(`¡Gracias por tu compra! Total: $${(total / 100).toFixed(3)}\nPronto nos pondremos en contacto contigo para confirmar tu pedido.`);
+            alert(`¡Gracias por tu compra! Total: ${formatPrice(total)}\nPronto nos pondremos en contacto contigo para confirmar tu pedido.`);
             
             // Vaciar carrito después de la compra
             cart = [];
