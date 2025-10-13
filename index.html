@@ -3,35 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smoothies Naturales - Deliciosos y Saludables</title>
-    
-    <!-- Enlaces a archivos CSS separados -->
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/products.css">
-    <link rel="stylesheet" href="styles/cart.css">
+    <title>Smoothies Naturales - Inicio</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <!-- Header incluido desde archivo externo -->
-    <div id="header-container"></div>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">Smoothies Naturales</div>
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Menú</a></li>
+                    <li><a href="nosotros.html">Sobre Nosotros</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                    <li><a href="carrito.html">🛒 Carrito</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <h1>Smoothies Naturales</h1>
             <p>Deliciosos, saludables y llenos de energía para tu día</p>
-            <a href="#" class="btn">Ver Menú</a>
+            <a href="productos.html" class="btn">Ver Menú</a>
         </div>
     </section>
 
-    <!-- Sección de productos incluida desde archivo externo -->
-    <div id="products-container"></div>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Smoothies Naturales. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
-    <!-- Footer incluido desde archivo externo -->
-    <div id="footer-container"></div>
-
-    <!-- Enlaces a archivos JavaScript -->
-    <script src="js/main.js"></script>
-    <script src="js/products.js"></script>
-    <script src="js/cart.js"></script>
+    <script src="../js/main.js"></script>
 </body>
 </html>
