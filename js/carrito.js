@@ -1,9 +1,15 @@
 // js/carrito.js
-// Archivo listo para futura funcionalidad del carrito
-console.log('Carrito.js cargado - Listo para expandir funcionalidad');
-
-// Aquí puedes agregar en el futuro:
-// - Manejo del carrito de compras
-// - LocalStorage
-// - Cálculo de totales
-// - etc.
+// Funcionalidad básica del carrito
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurar botones de agregar al carrito
+    const botonesCarrito = document.querySelectorAll('.add-to-cart');
+    
+    botonesCarrito.forEach(button => {
+        button.addEventListener('click', function() {
+            const smoothieName = this.parentElement.querySelector('.smoothie-name').textContent;
+            alert(`¡${smoothieName} agregado al carrito!`);
+        });
+    });
+    
+    console.log('Carrito.js cargado correctamente');
+});
