@@ -4,26 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smoothies Naturales - Deliciosos y Saludables</title>
-    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Enlaces a archivos CSS separados -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/products.css">
+    <link rel="stylesheet" href="styles/cart.css">
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <nav class="navbar">
-                <div class="logo">Smoothies Naturales</div>
-                <ul class="nav-links">
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Menú</a></li>
-                    <li><a href="#">Carrito</a></li>  <!-- ← CARRITO CORREGIDO -->
-                    <li><a href="#">Sobre Nosotros</a></li>
-                    <li><a href="#">Contacto</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <!-- Header incluido desde archivo externo -->
+    <div id="header-container"></div>
 
-    <!-- El resto de tu HTML se mantiene igual -->
+    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <h1>Smoothies Naturales</h1>
@@ -32,76 +23,15 @@
         </div>
     </section>
 
-    <!-- Smoothies Section -->
-    <section class="smoothies-section">
-        <div class="container">
-            <h2 class="section-title">Nuestros Smoothies</h2>
-            <div class="smoothies-grid">
-                <!-- Smoothie 1 -->
-                <div class="smoothie-card">
-                    <div class="smoothie-img" style="background-color: #ff6b6b;"></div>
-                    <div class="smoothie-info">
-                        <h3 class="smoothie-name">Berry Blast</h3>
-                        <p class="smoothie-desc">Deliciosa mezcla de fresas, arándanos y frambuesas con yogurt natural</p>
-                        <p class="smoothie-price">$4.990</p>
-                        <button class="add-to-cart">Agregar al Carrito</button>
-                    </div>
-                </div>
-                
-                <!-- Smoothie 2 -->
-                <div class="smoothie-card">
-                    <div class="smoothie-img" style="background-color: #ffd166;"></div>
-                    <div class="smoothie-info">
-                        <h3 class="smoothie-name">Tropical Paradise</h3>
-                        <p class="smoothie-desc">Mango, piña y maracuyá con un toque de coco para transportarte al trópico</p>
-                        <p class="smoothie-price">$5.490</p>
-                        <button class="add-to-cart">Agregar al Carrito</button>
-                    </div>
-                </div>
-                
-                <!-- Smoothie 3 -->
-                <div class="smoothie-card">
-                    <div class="smoothie-img" style="background-color: #06d6a0;"></div>
-                    <div class="smoothie-info">
-                        <h3 class="smoothie-name">Green Energy</h3>
-                        <p class="smoothie-desc">Espinaca, plátano, kiwi y manzana verde para un boost de energía natural</p>
-                        <p class="smoothie-price">$5.990</p>
-                        <button class="add-to-cart">Agregar al Carrito</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Sección de productos incluida desde archivo externo -->
+    <div id="products-container"></div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Smoothies Naturales</h3>
-                    <p>Deliciosos, saludables y llenos de energía para tu día</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Enlaces Rápidos</h3>
-                    <a href="#">Inicio</a>
-                    <a href="#">Menú</a>
-                    <a href="#">Carrito</a>  <!-- ← También en el footer -->
-                    <a href="#">Sobre Nosotros</a>
-                    <a href="#">Contacto</a>
-                </div>
-                <div class="footer-section">
-                    <h3>Contacto</h3>
-                    <p>Email: info@smoothiesnaturales.com</p>
-                    <p>Teléfono: +56 9 1234 5678</p>
-                    <p>Dirección: Av. Siempre Viva 123, Santiago</p>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2025 Smoothies Naturales. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
+    <!-- Footer incluido desde archivo externo -->
+    <div id="footer-container"></div>
 
-    <script src="js/carrito.js"></script>
+    <!-- Enlaces a archivos JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
 </body>
 </html>
