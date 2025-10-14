@@ -1,7 +1,9 @@
 // js/main.js
 
-// ---------------- Config & helpers ----------------
-const STORAGE_KEY = 'carrito_v1'; // fácil de migrar cuando conectes backend
+console.log('[main.js] Cargado ✅');
+
+// ---------- Utils ----------
+const STORAGE_KEY = 'carrito_v1';
 const CLP = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
 
 const Carrito = {
@@ -33,22 +35,57 @@ const Carrito = {
   total() { return this.obtener().reduce((acc, p) => acc + p.precio * p.cantidad, 0); }
 };
 
-// ---------------- UI: Productos ----------------
-function initBotonesAgregar() {
+// ---------- Add to cart (setup directo y delegación) ----------
+function wireButtons() {
   const botones = document.querySelectorAll('.add-to-cart[data-id]');
-  if (!botones.length) return;
-
-  botones.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const { id, name, price } = btn.dataset;
-      const precio = parseInt(price, 10);
-      Carrito.agregar({ id, nombre: name, precio, cantidad: 1 });
-      alert(`¡${name} agregado al carrito!`);
-    });
-  });
+  if (!botones.length) {
+    console.warn('[main.js] No se encontraron botones .add-to-cart con data-id en el DOM inicial.');
+    return;
+  }
+  botones.forEach(btn => btn.addEventListener('click', onAddToCartClick));
+  console.log(`[main.js] Listeners añadidos a ${botones.length} botón(es).`);
 }
 
-// ---------------- UI: Carrito ----------------
+function onAddToCartClick(ev) {
+  const btn = ev.currentTarget || ev.target.closest('.add-to-cart');
+  if (!btn) return;
+
+  const { id, name, price } = btn.dataset;
+  if (!id || !name || !price) {
+    console.error('[main.js] Botón sin data-id/name/price:', btn);
+    alert('Este producto no tiene datos completos.');
+    return;
+  }
+
+  const precio = parseInt(price, 10);
+  if (Number.isNaN(precio)) {
+    console.error('[main.js] data-price inválido:', price);
+    alert('Precio inválido.');
+    return;
+  }
+
+  Carrito.agregar({ id, nombre: name, precio, cantidad: 1 });
+  alert(`¡${name} agregado al carrito!`);
+  renderCarrito(); // por si estamos en carrito.html
+}
+
+// Delegación (por si los botones se agregan dinámicamente)
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.add-to-cart');
+  if (!btn) return;
+  // si no tenía el listener directo (por cualquier motivo), manejamos aquí
+  if (!btn.dataset.id) {
+    console.error('[main.js] .add-to-cart sin data-id:', btn);
+    return;
+  }
+  // Evita doble manejo si ya vino del listener directo
+  if (!e.__handled_add_to_cart__) {
+    e.__handled_add_to_cart__ = true;
+    onAddToCartClick(e);
+  }
+});
+
+// ---------- Carrito UI ----------
 function renderCarrito() {
   const cont = document.getElementById('carrito-lista');
   if (!cont) return;
@@ -61,13 +98,13 @@ function renderCarrito() {
     return;
   }
 
-  const lista = document.createElement('div');
-  lista.className = 'cart-list';
+  const list = document.createElement('div');
+  list.className = 'cart-list';
 
   items.forEach(p => {
-    const fila = document.createElement('div');
-    fila.className = 'cart-item';
-    fila.innerHTML = `
+    const row = document.createElement('div');
+    row.className = 'cart-item';
+    row.innerHTML = `
       <div class="cart-item__main">
         <div class="cart-item__name">${p.nombre}</div>
         <div class="cart-item__price">${CLP.format(p.precio)}</div>
@@ -80,43 +117,58 @@ function renderCarrito() {
         <button class="cart-remove" data-id="${p.id}">Eliminar</button>
       </div>
     `;
-    lista.appendChild(fila);
+    list.appendChild(row);
   });
 
-  cont.appendChild(lista);
+  cont.appendChild(list);
 
-  const pie = document.createElement('div');
-  pie.className = 'cart-footer';
-  pie.innerHTML = `
+  const footer = document.createElement('div');
+  footer.className = 'cart-footer';
+  footer.innerHTML = `
     <div class="cart-total"><strong>Total:</strong> <span id="cart-total-number">${CLP.format(Carrito.total())}</span></div>
     <div class="cart-actions">
       <button id="cart-clear">Vaciar carrito</button>
       <button id="cart-checkout">Ir a pagar</button>
     </div>
   `;
-  cont.appendChild(pie);
+  cont.appendChild(footer);
 
-  // Eventos
+  // Eventos del carrito
   cont.querySelectorAll('.cart-qty').forEach(input => {
     input.addEventListener('change', () => {
       Carrito.actualizarCantidad(input.dataset.id, input.value);
       renderCarrito();
     });
   });
-
   cont.querySelectorAll('.cart-remove').forEach(btn => {
     btn.addEventListener('click', () => {
       Carrito.eliminar(btn.dataset.id);
       renderCarrito();
     });
   });
-
   cont.querySelector('#cart-clear')?.addEventListener('click', () => {
     if (confirm('¿Vaciar el carrito?')) {
       Carrito.vaciar();
       renderCarrito();
     }
   });
+  cont.querySelector('#cart-checkout')?.addEventListener('click', async () => {
+    // Aquí conectas a tu backend más adelante:
+    // await fetch('https://tu-api/checkout', {...});
+    alert('Checkout simulado. Aquí conectaremos con tu backend.');
+  });
+}
 
-  // Punto de integración con backend
-  cont.querySelector('#cart-checkout')?.addEventListener('click', async ()
+// ---------- Arranque robusto ----------
+function start() {
+  try { wireButtons(); } catch (e) { console.error(e); }
+  try { renderCarrito(); } catch (e) { console.error(e); }
+}
+
+// DOM listo
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', start);
+} else {
+  start();
+}
+
