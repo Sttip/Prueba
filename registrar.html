@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Registrarse</title>
   <link rel="stylesheet" href="css/style.css"/>
+  <script src="js/auth.js" defer></script>
 </head>
 <body>
   <!-- Header -->
@@ -26,25 +27,21 @@
   <section class="auth">
     <div class="auth-card">
       <h2 class="auth-title">Crear Cuenta</h2>
+
       <form id="form-register" class="auth-form" novalidate>
         <div class="form-field">
-          <label for="reg-usuario">Usuario</label>
-          <input type="text" id="reg-usuario" name="usuario" placeholder="Elige un usuario" required />
-        </div>
-
-        <div class="form-field">
-          <label for="reg-email">Email</label>
+          <label for="reg-email">Correo</label>
           <input type="email" id="reg-email" name="email" placeholder="tu@correo.com" required />
         </div>
 
         <div class="form-field">
           <label for="reg-pass">Contraseña</label>
-          <input type="password" id="reg-pass" name="password" placeholder="Crea una contraseña" required />
+          <input type="password" id="reg-pass" name="password" placeholder="Crea una contraseña" required minlength="6"/>
         </div>
 
         <div class="form-field">
           <label for="reg-pass2">Confirmar contraseña</label>
-          <input type="password" id="reg-pass2" name="password2" placeholder="Repite la contraseña" required />
+          <input type="password" id="reg-pass2" name="password2" placeholder="Repite la contraseña" required minlength="6"/>
         </div>
 
         <button type="submit" class="btn btn-primary auth-submit">Registrarme</button>
@@ -63,18 +60,19 @@
     </div>
   </footer>
 
-  <script src="js/main.js" defer></script>
   <script>
-    // Simulación local de registro (lista para backend)
-    document.getElementById('form-register').addEventListener('submit', (e) => {
+    document.getElementById('form-register').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const usuario = document.getElementById('reg-usuario').value.trim();
       const email = document.getElementById('reg-email').value.trim();
       const pass1 = document.getElementById('reg-pass').value.trim();
       const pass2 = document.getElementById('reg-pass2').value.trim();
 
-      if (!usuario || !email || !pass1 || !pass2) {
+      if (!email || !pass1 || !pass2) {
         alert('Completa todos los campos.');
+        return;
+      }
+      if (pass1.length < 6) {
+        alert('La contraseña debe tener al menos 6 caracteres.');
         return;
       }
       if (pass1 !== pass2) {
@@ -82,12 +80,13 @@
         return;
       }
 
-      // Aquí conectarás con tu backend (POST /register)
-      // fetch('https://tu-api/register', { method:'POST', ... })
+      const { ok, error } = await Auth.register({ email, password: pass1 });
+      if (!ok) {
+        alert(error || 'No se pudo registrar.');
+        return;
+      }
 
-      // Demo: guarda “usuario registrado” y redirige a login
-      localStorage.setItem('demo_registered_user', JSON.stringify({ usuario, email }));
-      alert('Registro simulado. Ahora inicia sesión.');
+      alert('Registro exitoso. Ahora inicia sesión.');
       window.location.href = 'login.html';
     });
   </script>
