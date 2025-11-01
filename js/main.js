@@ -35,6 +35,70 @@ const Carrito = {
   total() { return this.obtener().reduce((acc, p) => acc + p.precio * p.cantidad, 0); }
 };
 
+// ---------- Catálogo enriquecido ----------
+const PRODUCTS = {
+  "berry-blast": {
+    id: "berry-blast",
+    stock: 12,
+    ingredientes: [
+      "Fresas frescas", "Arándanos", "Frambuesas", "Yogurt natural"
+    ],
+    beneficios: [
+      "Antioxidantes naturales que apoyan la salud celular",
+      "Aporte de vitamina C para el sistema inmune"
+    ],
+    nutricion: {
+      "Porción": "350 ml",
+      "Calorías": "210 kcal",
+      "Proteínas": "6 g",
+      "Carbohidratos": "36 g",
+      "Azúcares": "28 g",
+      "Grasas": "3 g",
+      "Fibra": "4 g"
+    }
+  },
+  "tropical-paradise": {
+    id: "tropical-paradise",
+    stock: 8,
+    ingredientes: [
+      "Mango", "Piña", "Maracuyá", "Coco"
+    ],
+    beneficios: [
+      "Hidratación y aporte de electrolitos naturales",
+      "Energía rápida antes de actividad física"
+    ],
+    nutricion: {
+      "Porción": "350 ml",
+      "Calorías": "240 kcal",
+      "Proteínas": "4 g",
+      "Carbohidratos": "42 g",
+      "Azúcares": "31 g",
+      "Grasas": "5 g",
+      "Fibra": "3 g"
+    }
+  },
+  "green-energy": {
+    id: "green-energy",
+    stock: 0, // agotado para ejemplo
+    ingredientes: [
+      "Espinaca", "Plátano", "Kiwi", "Manzana verde"
+    ],
+    beneficios: [
+      "Rico en hierro y vitamina K",
+      "Energía sostenida con índice glucémico medio"
+    ],
+    nutricion: {
+      "Porción": "350 ml",
+      "Calorías": "200 kcal",
+      "Proteínas": "5 g",
+      "Carbohidratos": "34 g",
+      "Azúcares": "22 g",
+      "Grasas": "2 g",
+      "Fibra": "5 g"
+    }
+  }
+};
+
 // ---------- Add to cart (setup directo y delegación) ----------
 function wireButtons() {
   const botones = document.querySelectorAll('.add-to-cart[data-id]');
@@ -73,12 +137,10 @@ function onAddToCartClick(ev) {
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.add-to-cart');
   if (!btn) return;
-  // si no tenía el listener directo (por cualquier motivo), manejamos aquí
   if (!btn.dataset.id) {
     console.error('[main.js] .add-to-cart sin data-id:', btn);
     return;
   }
-  // Evita doble manejo si ya vino del listener directo
   if (!e.__handled_add_to_cart__) {
     e.__handled_add_to_cart__ = true;
     onAddToCartClick(e);
@@ -153,8 +215,6 @@ function renderCarrito() {
     }
   });
   cont.querySelector('#cart-checkout')?.addEventListener('click', async () => {
-    // Aquí conectas a tu backend más adelante:
-    // await fetch('https://tu-api/checkout', {...});
     alert('Checkout simulado. Aquí conectaremos con tu backend.');
   });
 }
@@ -173,7 +233,7 @@ function wireProductDetail() {
   PD.desc  = document.getElementById('pd-desc');
   PD.add   = document.getElementById('pd-add');
 
-  // Hacer clickeables imagen y título
+  // Hacer clickeables imagen y título (abre modal y llena contenido)
   document.querySelectorAll('.smoothie-img, .smoothie-name').forEach(el => {
     el.style.cursor = 'pointer';
     el.addEventListener('click', () => {
@@ -193,22 +253,85 @@ function wireProductDetail() {
       const desc  = card.querySelector('.smoothie-desc')?.textContent?.trim() || '';
       const color = card.querySelector('.smoothie-img')?.style?.backgroundColor || '#888';
 
-      // Rellenar modal
+      // Datos extra del catálogo
+      const extra = PRODUCTS[id] || {};
+      const stock = typeof extra.stock === 'number' ? extra.stock : 999;
+
+      // Relleno básico
       PD.name.textContent  = name;
       PD.price.textContent = CLP.format(price);
       PD.desc.textContent  = desc;
-      PD.img.style.background = color;
+      if (PD.img) PD.img.style.background = color;
 
-      // Configurar botón "Agregar" del modal
+      // Stock badge + estado botón
+      const stockEl = document.getElementById('pd-stock');
+      if (stockEl) {
+        stockEl.textContent = stock > 0 ? `Disponible: ${stock}` : 'Agotado temporalmente';
+        stockEl.className = 'pd-stock-badge ' + (stock > 0 ? 'pd-stock--ok' : 'pd-stock--no');
+      }
+
       PD.add.dataset.id    = id;
       PD.add.dataset.name  = name;
       PD.add.dataset.price = String(price);
+      PD.add.disabled = stock <= 0;
+      PD.add.textContent = stock > 0 ? 'Agregar al Carrito' : 'No Disponible';
+
+      // Render Ingredientes
+      const ulIng = document.getElementById('pd-ingredientes');
+      if (ulIng) {
+        ulIng.innerHTML = '';
+        (extra.ingredientes || []).forEach(txt => {
+          const li = document.createElement('li');
+          li.textContent = txt;
+          ulIng.appendChild(li);
+        });
+      }
+
+      // Render Beneficios
+      const ulBen = document.getElementById('pd-beneficios');
+      if (ulBen) {
+        ulBen.innerHTML = '';
+        (extra.beneficios || []).forEach(txt => {
+          const li = document.createElement('li');
+          li.textContent = txt;
+          ulBen.appendChild(li);
+        });
+      }
+
+      // Render Nutrición
+      const tbl = document.getElementById('pd-nutricion');
+      if (tbl) {
+        tbl.innerHTML = '';
+        const nutri = extra.nutricion || {};
+        Object.keys(nutri).forEach(k => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${k}</td><td style="text-align:right">${nutri[k]}</td>`;
+          tbl.appendChild(tr);
+        });
+      }
+
+      // Tabs: activa Ingredientes por defecto
+      setActiveTab('ingredientes');
 
       PD.modal.classList.remove('pd-hidden');
     });
   });
 
-  // Agregar al carrito desde el modal (reusa tu lógica de Carrito)
+  // Tabs dentro del modal
+  PD.modal.addEventListener('click', (e) => {
+    const tab = e.target.closest('.pd-tab');
+    if (!tab) return;
+    setActiveTab(tab.dataset.tab);
+  });
+
+  function setActiveTab(name) {
+    PD.modal.querySelectorAll('.pd-tab')
+      .forEach(b => b.classList.toggle('is-active', b.dataset.tab === name));
+    PD.modal.querySelectorAll('.pd-panel')
+      .forEach(p => p.classList.toggle('is-hidden', p.dataset.panel !== name));
+  }
+
+  // Agregar al carrito desde el modal
   PD.add?.addEventListener('click', () => {
     const { id, name, price } = PD.add.dataset;
     const precio = parseInt(price, 10);
