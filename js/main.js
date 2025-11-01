@@ -159,10 +159,79 @@ function renderCarrito() {
   });
 }
 
+// ---------- Detalle de producto (modal) ----------
+let PD = {};
+
+function wireProductDetail() {
+  PD.modal = document.getElementById('product-detail');
+  if (!PD.modal) { console.warn('[main.js] No hay #product-detail en este documento.'); return; }
+
+  PD.close = document.getElementById('pd-close');
+  PD.img   = document.getElementById('pd-image');
+  PD.name  = document.getElementById('pd-name');
+  PD.price = document.getElementById('pd-price');
+  PD.desc  = document.getElementById('pd-desc');
+  PD.add   = document.getElementById('pd-add');
+
+  // Hacer clickeables imagen y título
+  document.querySelectorAll('.smoothie-img, .smoothie-name').forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => {
+      const card = el.closest('.smoothie-card');
+      if (!card) return;
+
+      const addBtn = card.querySelector('.add-to-cart');
+      const id    = addBtn?.dataset.id ||
+                    card.querySelector('.smoothie-name')?.textContent?.trim().toLowerCase().replace(/\s+/g, '-');
+      const name  = addBtn?.dataset.name ||
+                    card.querySelector('.smoothie-name')?.textContent?.trim() || '';
+      const price = parseInt(
+        addBtn?.dataset.price ||
+        (card.querySelector('.smoothie-price')?.textContent || '').replace(/[^\d]/g, ''),
+        10
+      );
+      const desc  = card.querySelector('.smoothie-desc')?.textContent?.trim() || '';
+      const color = card.querySelector('.smoothie-img')?.style?.backgroundColor || '#888';
+
+      // Rellenar modal
+      PD.name.textContent  = name;
+      PD.price.textContent = CLP.format(price);
+      PD.desc.textContent  = desc;
+      PD.img.style.background = color;
+
+      // Configurar botón "Agregar" del modal
+      PD.add.dataset.id    = id;
+      PD.add.dataset.name  = name;
+      PD.add.dataset.price = String(price);
+
+      PD.modal.classList.remove('pd-hidden');
+    });
+  });
+
+  // Agregar al carrito desde el modal (reusa tu lógica de Carrito)
+  PD.add?.addEventListener('click', () => {
+    const { id, name, price } = PD.add.dataset;
+    const precio = parseInt(price, 10);
+    if (!id || !name || Number.isNaN(precio)) return;
+
+    Carrito.agregar({ id, nombre: name, precio, cantidad: 1 });
+    alert(`¡${name} agregado al carrito!`);
+    PD.modal.classList.add('pd-hidden');
+    renderCarrito();
+  });
+
+  // Cerrar modal
+  function closeModal() { PD.modal.classList.add('pd-hidden'); }
+  PD.close?.addEventListener('click', closeModal);
+  PD.modal.addEventListener('click', (e) => { if (e.target === PD.modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+}
+
 // ---------- Arranque robusto ----------
 function start() {
   try { wireButtons(); } catch (e) { console.error(e); }
   try { renderCarrito(); } catch (e) { console.error(e); }
+  try { wireProductDetail(); } catch (e) { console.error(e); }
 }
 
 // DOM listo
@@ -171,4 +240,3 @@ if (document.readyState === 'loading') {
 } else {
   start();
 }
-
