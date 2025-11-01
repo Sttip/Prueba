@@ -40,74 +40,36 @@ const PRODUCTS = {
   "berry-blast": {
     id: "berry-blast",
     stock: 12,
-    ingredientes: [
-      "Fresas frescas", "Arándanos", "Frambuesas", "Yogurt natural"
-    ],
-    beneficios: [
-      "Antioxidantes naturales que apoyan la salud celular",
-      "Aporte de vitamina C para el sistema inmune"
-    ],
-    nutricion: {
-      "Porción": "350 ml",
-      "Calorías": "210 kcal",
-      "Proteínas": "6 g",
-      "Carbohidratos": "36 g",
-      "Azúcares": "28 g",
-      "Grasas": "3 g",
-      "Fibra": "4 g"
-    }
+    ingredientes: ["Fresas frescas","Arándanos","Frambuesas","Yogurt natural"],
+    beneficios: ["Antioxidantes naturales que apoyan la salud celular","Aporte de vitamina C para el sistema inmune"],
+    nutricion: { "Porción":"350 ml","Calorías":"210 kcal","Proteínas":"6 g","Carbohidratos":"36 g","Azúcares":"28 g","Grasas":"3 g","Fibra":"4 g" }
   },
   "tropical-paradise": {
     id: "tropical-paradise",
     stock: 8,
-    ingredientes: [
-      "Mango", "Piña", "Maracuyá", "Coco"
-    ],
-    beneficios: [
-      "Hidratación y aporte de electrolitos naturales",
-      "Energía rápida antes de actividad física"
-    ],
-    nutricion: {
-      "Porción": "350 ml",
-      "Calorías": "240 kcal",
-      "Proteínas": "4 g",
-      "Carbohidratos": "42 g",
-      "Azúcares": "31 g",
-      "Grasas": "5 g",
-      "Fibra": "3 g"
-    }
+    ingredientes: ["Mango","Piña","Maracuyá","Coco"],
+    beneficios: ["Hidratación y aporte de electrolitos naturales","Energía rápida antes de actividad física"],
+    nutricion: { "Porción":"350 ml","Calorías":"240 kcal","Proteínas":"4 g","Carbohidratos":"42 g","Azúcares":"31 g","Grasas":"5 g","Fibra":"3 g" }
   },
   "green-energy": {
     id: "green-energy",
     stock: 0,
-    ingredientes: [
-      "Espinaca", "Plátano", "Kiwi", "Manzana verde"
-    ],
-    beneficios: [
-      "Rico en hierro y vitamina K",
-      "Energía sostenida con índice glucémico medio"
-    ],
-    nutricion: {
-      "Porción": "350 ml",
-      "Calorías": "200 kcal",
-      "Proteínas": "5 g",
-      "Carbohidratos": "34 g",
-      "Azúcares": "22 g",
-      "Grasas": "2 g",
-      "Fibra": "5 g"
-    }
+    ingredientes: ["Espinaca","Plátano","Kiwi","Manzana verde"],
+    beneficios: ["Rico en hierro y vitamina K","Energía sostenida con índice glucémico medio"],
+    nutricion: { "Porción":"350 ml","Calorías":"200 kcal","Proteínas":"5 g","Carbohidratos":"34 g","Azúcares":"22 g","Grasas":"2 g","Fibra":"5 g" }
   }
 };
 
 // ---------- Add to cart ----------
 function wireButtons() {
-  const botones = document.querySelectorAll('.add-to-cart[data-id]');
+  // ⬇️ EXCLUYE el botón del modal
+  const botones = document.querySelectorAll('.add-to-cart[data-id]:not(#pd-add)');
   if (!botones.length) {
-    console.warn('[main.js] No se encontraron botones .add-to-cart con data-id en el DOM inicial.');
+    console.warn('[main.js] No se encontraron botones .add-to-cart (catálogo) con data-id.');
     return;
   }
   botones.forEach(btn => btn.addEventListener('click', onAddToCartClick));
-  console.log(`[main.js] Listeners añadidos a ${botones.length} botón(es).`);
+  console.log(`[main.js] Listeners añadidos a ${botones.length} botón(es) del catálogo.`);
 }
 
 function onAddToCartClick(ev) {
@@ -138,7 +100,7 @@ document.addEventListener('click', (e) => {
   const btn = e.target.closest('.add-to-cart');
   if (!btn) return;
 
-  // Evita manejar el botón del modal (#pd-add)
+  // ⬇️ Ignora el botón del modal
   if (btn.id === 'pd-add') return;
 
   if (!btn.dataset.id) {
@@ -325,7 +287,7 @@ function wireProductDetail() {
       .forEach(p => p.classList.toggle('is-hidden', p.dataset.panel !== name));
   }
 
-  // ✅ Evita doble ejecución
+  // ✅ Handler del modal sin duplicar
   PD.add?.addEventListener('click', (ev) => {
     ev.preventDefault();
     ev.stopPropagation();
