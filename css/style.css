@@ -424,3 +424,29 @@ footer p {
 .pd-info #pd-price { font-weight: 700; margin: 0 0 12px; }
 .pd-desc { opacity: .9; line-height: 1.55; }
 
+
+
+
+/* Meta */
+.pd-meta { display:flex; gap:12px; align-items:center; margin:4px 0 10px; }
+.pd-price { font-weight:700; }
+.pd-stock-badge { font-size:.9rem; padding:2px 8px; border-radius:999px; background:#1f2937; }
+.pd-stock--ok { background:#14532d; }
+.pd-stock--no { background:#7f1d1d; }
+
+/* Tabs */
+.pd-tabs { display:flex; gap:8px; margin:14px 0 6px; }
+.pd-tab { border:0; background:#1a1a1a; color:#fff; padding:8px 12px; border-radius:10px; cursor:pointer; }
+.pd-tab.is-active { outline:2px solid #2ecc71; }
+
+/* Panels */
+.pd-panels { background:#1a1a1a; border-radius:12px; padding:12px; margin-bottom:14px; }
+.pd-panel.is-hidden { display:none; }
+
+.pd-list { margin:0; padding-left:18px; }
+.pd-list li { margin:4px 0; }
+
+.pd-table { width:100%; border-collapse:collapse; }
+.pd-table td { padding:6px 4px; border-bottom:1px solid #2b2b2b; }
+.pd-table td:first-child { opacity:.9; }
+
