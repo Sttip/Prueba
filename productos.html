@@ -88,8 +88,35 @@
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
+  
   <script src="js/main.js" defer></script>
+  
+<!-- Detalle de producto (modal) -->
+<div id="product-detail" class="pd-hidden">
+  <button id="pd-close" aria-label="Cerrar">✕</button>
+
+  <div class="pd-card">
+    <div class="pd-image-wrap">
+      <div id="pd-image" class="pd-image"></div>
+    </div>
+
+    <div class="pd-info">
+      <h2 id="pd-name"></h2>
+      <p id="pd-price"></p>
+      <p id="pd-desc" class="pd-desc"></p>
+
+      <button
+        id="pd-add"
+        class="add-to-cart"
+        data-id=""
+        data-name=""
+        data-price=""
+      >
+        Agregar al Carrito
+      </button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
