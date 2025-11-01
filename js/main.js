@@ -79,7 +79,7 @@ const PRODUCTS = {
   },
   "green-energy": {
     id: "green-energy",
-    stock: 0, // agotado para ejemplo
+    stock: 0,
     ingredientes: [
       "Espinaca", "Plátano", "Kiwi", "Manzana verde"
     ],
@@ -99,7 +99,7 @@ const PRODUCTS = {
   }
 };
 
-// ---------- Add to cart (setup directo y delegación) ----------
+// ---------- Add to cart ----------
 function wireButtons() {
   const botones = document.querySelectorAll('.add-to-cart[data-id]');
   if (!botones.length) {
@@ -130,13 +130,17 @@ function onAddToCartClick(ev) {
 
   Carrito.agregar({ id, nombre: name, precio, cantidad: 1 });
   alert(`¡${name} agregado al carrito!`);
-  renderCarrito(); // por si estamos en carrito.html
+  renderCarrito();
 }
 
-// Delegación (por si los botones se agregan dinámicamente)
+// ---------- Delegación (evita doble click desde modal) ----------
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.add-to-cart');
   if (!btn) return;
+
+  // Evita manejar el botón del modal (#pd-add)
+  if (btn.id === 'pd-add') return;
+
   if (!btn.dataset.id) {
     console.error('[main.js] .add-to-cart sin data-id:', btn);
     return;
@@ -233,7 +237,6 @@ function wireProductDetail() {
   PD.desc  = document.getElementById('pd-desc');
   PD.add   = document.getElementById('pd-add');
 
-  // Hacer clickeables imagen y título (abre modal y llena contenido)
   document.querySelectorAll('.smoothie-img, .smoothie-name').forEach(el => {
     el.style.cursor = 'pointer';
     el.addEventListener('click', () => {
@@ -253,17 +256,14 @@ function wireProductDetail() {
       const desc  = card.querySelector('.smoothie-desc')?.textContent?.trim() || '';
       const color = card.querySelector('.smoothie-img')?.style?.backgroundColor || '#888';
 
-      // Datos extra del catálogo
       const extra = PRODUCTS[id] || {};
       const stock = typeof extra.stock === 'number' ? extra.stock : 999;
 
-      // Relleno básico
       PD.name.textContent  = name;
       PD.price.textContent = CLP.format(price);
       PD.desc.textContent  = desc;
       if (PD.img) PD.img.style.background = color;
 
-      // Stock badge + estado botón
       const stockEl = document.getElementById('pd-stock');
       if (stockEl) {
         stockEl.textContent = stock > 0 ? `Disponible: ${stock}` : 'Agotado temporalmente';
@@ -276,7 +276,6 @@ function wireProductDetail() {
       PD.add.disabled = stock <= 0;
       PD.add.textContent = stock > 0 ? 'Agregar al Carrito' : 'No Disponible';
 
-      // Render Ingredientes
       const ulIng = document.getElementById('pd-ingredientes');
       if (ulIng) {
         ulIng.innerHTML = '';
@@ -287,7 +286,6 @@ function wireProductDetail() {
         });
       }
 
-      // Render Beneficios
       const ulBen = document.getElementById('pd-beneficios');
       if (ulBen) {
         ulBen.innerHTML = '';
@@ -298,7 +296,6 @@ function wireProductDetail() {
         });
       }
 
-      // Render Nutrición
       const tbl = document.getElementById('pd-nutricion');
       if (tbl) {
         tbl.innerHTML = '';
@@ -310,14 +307,11 @@ function wireProductDetail() {
         });
       }
 
-      // Tabs: activa Ingredientes por defecto
       setActiveTab('ingredientes');
-
       PD.modal.classList.remove('pd-hidden');
     });
   });
 
-  // Tabs dentro del modal
   PD.modal.addEventListener('click', (e) => {
     const tab = e.target.closest('.pd-tab');
     if (!tab) return;
@@ -331,8 +325,11 @@ function wireProductDetail() {
       .forEach(p => p.classList.toggle('is-hidden', p.dataset.panel !== name));
   }
 
-  // Agregar al carrito desde el modal
-  PD.add?.addEventListener('click', () => {
+  // ✅ Evita doble ejecución
+  PD.add?.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+
     const { id, name, price } = PD.add.dataset;
     const precio = parseInt(price, 10);
     if (!id || !name || Number.isNaN(precio)) return;
@@ -343,23 +340,22 @@ function wireProductDetail() {
     renderCarrito();
   });
 
-  // Cerrar modal
   function closeModal() { PD.modal.classList.add('pd-hidden'); }
   PD.close?.addEventListener('click', closeModal);
   PD.modal.addEventListener('click', (e) => { if (e.target === PD.modal) closeModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 }
 
-// ---------- Arranque robusto ----------
+// ---------- Arranque ----------
 function start() {
   try { wireButtons(); } catch (e) { console.error(e); }
   try { renderCarrito(); } catch (e) { console.error(e); }
   try { wireProductDetail(); } catch (e) { console.error(e); }
 }
 
-// DOM listo
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', start);
 } else {
   start();
 }
+
