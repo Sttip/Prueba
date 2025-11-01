@@ -96,23 +96,38 @@
   <button id="pd-close" aria-label="Cerrar">✕</button>
 
   <div class="pd-card">
-    <div class="pd-image-wrap">
-      <div id="pd-image" class="pd-image"></div>
+  <div class="pd-image-wrap">
+    <div id="pd-image" class="pd-image"></div>
+  </div>
+
+  <div class="pd-info">
+    <h2 id="pd-name"></h2>
+    <div class="pd-meta">
+      <span id="pd-price" class="pd-price"></span>
+      <span id="pd-stock" class="pd-stock-badge"></span>
+    </div>
+    <p id="pd-desc" class="pd-desc"></p>
+
+    <div class="pd-tabs">
+      <button class="pd-tab is-active" data-tab="ingredientes">Ingredientes</button>
+      <button class="pd-tab" data-tab="beneficios">Beneficios</button>
+      <button class="pd-tab" data-tab="nutricion">Información Nutricional</button>
     </div>
 
-    <div class="pd-info">
-      <h2 id="pd-name"></h2>
-      <p id="pd-price"></p>
-      <p id="pd-desc" class="pd-desc"></p>
+    <div class="pd-panels">
+      <div class="pd-panel" data-panel="ingredientes">
+        <ul id="pd-ingredientes" class="pd-list"></ul>
+      </div>
+      <div class="pd-panel is-hidden" data-panel="beneficios">
+        <ul id="pd-beneficios" class="pd-list"></ul>
+      </div>
+      <div class="pd-panel is-hidden" data-panel="nutricion">
+        <table id="pd-nutricion" class="pd-table"></table>
+      </div>
+    </div>
 
-      <button
-        id="pd-add"
-        class="add-to-cart"
-        data-id=""
-        data-name=""
-        data-price=""
-      >
-        Agregar al Carrito
+    <button id="pd-add" class="add-to-cart" data-id="" data-name="" data-price="">
+      Agregar al Carrito
       </button>
     </div>
   </div>
