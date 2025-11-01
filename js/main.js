@@ -57,6 +57,39 @@ const PRODUCTS = {
     ingredientes: ["Espinaca","Plátano","Kiwi","Manzana verde"],
     beneficios: ["Rico en hierro y vitamina K","Energía sostenida con índice glucémico medio"],
     nutricion: { "Porción":"350 ml","Calorías":"200 kcal","Proteínas":"5 g","Carbohidratos":"34 g","Azúcares":"22 g","Grasas":"2 g","Fibra":"5 g" }
+  },
+  "choco-protein": {
+    id: "choco-protein",
+    nombre: "Choco Protein",
+    descripcion: "Cacao puro con proteína whey y leche de almendras",
+    precio: 6290,
+    color: "#8b5cf6",
+    stock: 10,
+    ingredientes: ["Cacao 70%","Proteína whey","Leche de almendras","Dátiles"],
+    beneficios: ["Recuperación muscular","Antioxidantes del cacao"],
+    nutricion: { "Porción":"350 ml","Calorías":"260 kcal","Proteínas":"22 g","Carbohidratos":"24 g","Azúcares":"15 g","Grasas":"7 g","Fibra":"5 g" }
+  },
+  "matcha-boost": {
+    id: "matcha-boost",
+    nombre: "Matcha Boost",
+    descripcion: "Té matcha con plátano y leche de coco",
+    precio: 5790,
+    color: "#22c55e",
+    stock: 7,
+    ingredientes: ["Matcha","Plátano","Leche de coco","Miel"],
+    beneficios: ["Energía sostenida","Mejora la concentración"],
+    nutricion: { "Porción":"350 ml","Calorías":"230 kcal","Proteínas":"4 g","Carbohidratos":"35 g","Azúcares":"24 g","Grasas":"6 g","Fibra":"3 g" }
+  },
+  "piña-colada-fit": {
+    id: "piña-colada-fit",
+    nombre: "Piña Colada Fit",
+    descripcion: "Piña y coco sin azúcar añadida",
+    precio: 5290,
+    color: "#facc15",
+    stock: 0, // agotado
+    ingredientes: ["Piña","Agua de coco","Yogurt griego","Hielo"],
+    beneficios: ["Hidratación natural","Refrescante y ligera"],
+    nutricion: { "Porción":"350 ml","Calorías":"190 kcal","Proteínas":"8 g","Carbohidratos":"28 g","Azúcares":"21 g","Grasas":"3 g","Fibra":"2 g" }
   }
 };
 
